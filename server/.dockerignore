@@ -1,0 +1,25 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Settings
+.env
+
+# IDE and System Files
+.vscode/
+.idea/
+.DS_Store
+
+# Git
+.git/
+
+# Docker build related
+Dockerfile
+.dockerignore

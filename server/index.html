@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="yandex-verification" content="f635e1623939092d" />
+    <title>OpenClaw WeChat Link</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0SEVXF68MZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-0SEVXF68MZ');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9856047566815078" crossorigin="anonymous"></script>
+
+    <script async src="https://fundingchoicesmessages.google.com/i/pub-9856047566815078?ers=1"></script>
+    <script>(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();</script>
+
+    <link rel="icon" type="image/webp" href="/upload/WMW-logo.webp">
+    <style>
+        body { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100vh; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            /* 背景渐变保持不变 */
+            background: linear-gradient(135deg, #07C160 0%, #1a2a3a 100%); 
+            color: #fff; /* 全局文字改为白色，适配深色背景 */
+        }
+
+        .card { 
+            /* 核心修改：背景设为透明，去掉阴影 */
+            background: rgba(255, 255, 255, 0.1); /* 极低透明度的白色，增加层次感 */
+            backdrop-filter: blur(10px); /* 磨砂玻璃效果，如果想完全透明可删掉此行 */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* 淡淡的边框 */
+            
+            padding: 30px 20px; 
+            border-radius: 20px; 
+            width: 90%; 
+            max-width: 500px; 
+            text-align: center; 
+            box-sizing: border-box;
+        }
+
+        h2 { margin-top: 0; font-weight: 400; letter-spacing: 1px; }
+
+        .client-id { 
+            color: #4af626; /* ID 改用亮绿色，突出显示 */
+            font-family: monospace; 
+            font-size: 1.1em;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .qr-container {
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-container img { 
+            max-width: 100%; 
+            border-radius: 12px; 
+            display: none; 
+            margin: 20px auto;
+            /* 给二维码加个淡发光，防止在深色背景下看不清边框 */
+            box-shadow: 0 0 20px rgba(0,0,0,0.3); 
+            background: #fff; /* 二维码图片本身通常带白边，保留背景确保扫码率 */
+            padding: 5px;
+        }
+
+        .terminal {
+            margin-top: 25px; 
+            background: rgba(0, 0, 0, 0.6); /* 终端背景半透明黑 */
+            color: #4af626; 
+            padding: 12px; 
+            height: 180px; 
+            overflow-y: auto; 
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 12px; 
+            border-radius: 10px; 
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #status { 
+            margin-top: 15px; 
+            font-size: 14px; 
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-waiting { color: #f39c12; }
+        .status-success { color: #4af626; font-weight: bold; }
+        .status-error { color: #ff4d4d; background: rgba(255, 77, 77, 0.1) !important; }
+
+        /* 隐藏滚动条美化 */
+        .terminal::-webkit-scrollbar { width: 5px; }
+        .terminal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>设备连接 <span class="client-id">ID: {{ client_id }}</span></h2>
+        
+        <div class="qr-container">
+            <img id="qrcode" src="" alt="QRCode">
+        </div>
+        
+        <div id="status" class="status-waiting">正在建立 WebSocket 连接...</div>
+        
+        <div id="terminal" class="terminal"></div>
+    </div>
+
+<script>
+    // 1. 获取基础配置
+    const clientId = "{{ client_id }}"; // 由 FastAPI 模板渲染注入
+    
+    // 2. 从当前页面地址栏解析 Token (?token=xxxx)
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    // 3. 构建 WebSocket 连接地址（自动判断 ws 或 wss）
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    // 构建 WebSocket 连接地址（自动判断 ws 或 wss），并且加入 /openclaw 前缀
+    const wsUrl = `${protocol}//${window.location.host}/openclaw/ws/view/${clientId}${token ? '?token=' + token : ''}`;
+    
+    // 4. 初始化元素引用
+    const img = document.getElementById('qrcode');
+    const status = document.getElementById('status');
+    const term = document.getElementById('terminal');
+
+    // 如果地址栏没带 token，直接报错提示，不建立连接
+    if (!token) {
+        status.innerText = "错误：URL 缺少访问令牌 (token)";
+        status.className = "status-error";
+        console.error("No token provided in URL.");
+    } else {
+        connectWS();
+    }
+
+    function connectWS() {
+        const ws = new WebSocket(wsUrl);
+
+        // 连接成功建立
+        ws.onopen = () => {
+            console.log("WebSocket connected successfully.");
+            status.innerText = "已连接服务器，等待指令...";
+            status.className = "status-waiting";
+        };
+
+        // 处理服务器发来的数据
+        ws.onmessage = (e) => {
+            try {
+                const msg = JSON.parse(e.data);
+
+                // --- 处理二维码图片 ---
+                if (msg.type === "qrcode") {
+                    // 如果数据不是以 data:image 开头，补全它（支持 base64 直接传输）
+                    let srcData = msg.data;
+                    if (!srcData.startsWith('data:image')) {
+                        srcData = 'data:image/png;base64,' + srcData;
+                    }
+                    img.src = srcData;
+                    img.style.display = 'block';
+                    img.style.filter = "none"; // 恢复颜色
+                    img.style.opacity = "1";
+                    
+                    status.innerText = "二维码已就绪 (" + new Date().toLocaleTimeString() + ")";
+                    status.className = "status-success";
+                } 
+                
+                // --- 处理日志文本 ---
+                else if (msg.type === "log") {
+                    term.style.display = 'block';
+                    const line = document.createElement('div');
+                    line.style.marginBottom = "2px";
+                    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg.data}`;
+                    term.appendChild(line);
+                    
+                    // 自动滚动到终端底部
+                    term.scrollTop = term.scrollHeight;
+                }
+            } catch (err) {
+                console.error("无法解析服务器数据:", e.data, err);
+            }
+        };
+
+        // 处理连接关闭
+        ws.onclose = (e) => {
+            console.log("WebSocket closed:", e.code, e.reason);
+            
+            // 状态码 1008 通常代表 Policy Violation（我们在后端用于表示 Token 错误）
+            if (e.code === 1008 || e.code === 4003) {
+                status.innerText = "权限验证失败：Token 无效";
+            } else {
+                status.innerText = e.reason || "连接已断开 (房间可能已销毁)";
+            }
+            
+            status.className = "status-error";
+            
+            // 视觉反馈：将图片变灰变淡
+            img.style.filter = "grayscale(1)";
+            img.style.opacity = "0.3";
+        };
+
+        // 处理连接错误
+        ws.onerror = (err) => {
+            console.error("WebSocket Error:", err);
+            status.innerText = "网络连接错误，请检查服务器状态";
+            status.className = "status-error";
+        };
+    }
+</script>
+</body>
+</html>

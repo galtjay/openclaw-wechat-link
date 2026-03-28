@@ -1,0 +1,20 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+server/.venv/
+openclaw-wechat/.venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Settings / Secret
+.env
+
+# IDE and System Files
+.vscode/
+.idea/
+.DS_Store
