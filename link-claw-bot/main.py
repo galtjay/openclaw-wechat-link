@@ -176,6 +176,7 @@ async def run_uploader():
         await ws.close()
 
 if __name__ == "__main__":
+    print("正在安装微信插件...")    
     try:
         asyncio.run(run_uploader())
     except KeyboardInterrupt:

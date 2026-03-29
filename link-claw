@@ -11,7 +11,7 @@ cd /tmp/link-claw-bot
 执行脚本进行微信绑定:
 如果系统没有 uv，则先安装 uv 再执行下述命令。
 
-uv run main.py
+uv run main.py --index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 脚本一运行就会在 /tmp/link.txt 生成配对链接，请立即读取并将该链接返回给用户，方便用户打开。
 

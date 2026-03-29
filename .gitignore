@@ -4,6 +4,7 @@ venv/
 env/
 server/.venv/
 openclaw-wechat/.venv/
+link-claw-bot/.venv/
 
 # Python Cache
 __pycache__/
