@@ -98,6 +98,8 @@ async def run_uploader():
         f.write("请打开下方链接完成微信配对：\n")
         f.write(f"[LINK] {host}/openclaw/wechat-link/{TARGET_ID}?token={MY_TOKEN}\n")
     
+    print(f"[LINK] {host}/openclaw/wechat-link/{TARGET_ID}?token={MY_TOKEN}")
+    
     uri = f"{base_ws}/openclaw/ws/upload/{TARGET_ID}?token={MY_TOKEN}"
     # print(f"[*] 准备连接：{uri}")
     
