@@ -17,4 +17,6 @@ With QR onboarding and automated setup, users can complete integration without u
 
 使用方法，将下面的 prompt 发给 OpenClaw，等待它输出微信配对链接即可：
 
+```
 请查看流程配对微信：https://watermelonwater.tech/archives/link-claw-bot
+```
