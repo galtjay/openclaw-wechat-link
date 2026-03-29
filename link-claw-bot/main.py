@@ -14,28 +14,29 @@ from PIL import Image, ImageDraw
 SERVER_HOST = "https://cdn.watermelonwater.tech"
 TARGET_ID = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 MY_TOKEN = "WE_LOVE_WMW"
-INSTALL_CMD = """\
-# 清理 npx 缓存，避免 Permission denied
-rm -rf ~/.npm/_npx/* && \
+INSTALL_CMD="""\
+# 清理 npx 缓存，避免旧文件导致权限或版本问题
+rm -rf ~/.npm/_npx/* || true && \
 
-# 卸载可能已存在的旧 CLI，避免使用旧缓存
+# 卸载可能已存在的旧版 CLI，防止使用到旧缓存
 npm uninstall -g @tencent-weixin/openclaw-weixin-cli || true && \
 
-# 升级 npm（国内镜像）
+# 升级 npm（可在需要时替换成你本地更快的镜像）
 npm install -g npm --registry=https://registry.npmmirror.com && \
 
-# 删除插件安装残留目录（避免 duplicate plugin id）
-rm -rf /home/cloudphone/media/0/openclaw/extensions/.openclaw-install-stage-* || true && \
+# 清理可能残留的插件安装临时目录，防止出现 duplicate plugin id
+find ~/ -maxdepth 3 -type d -name ".openclaw-install-stage-*" -exec rm -rf {} + || true && \
 
-# 若插件已安装，跳过安装，直接重新配对
-if [ -d /home/cloudphone/media/0/openclaw/extensions/openclaw-weixin ]; then \
+# 检测 OpenClaw 插件目录是否已存在；如已存在，则跳过安装，直接执行重新配对
+if find ~/ -maxdepth 5 -type d -name "openclaw-weixin" | grep -q "openclaw-weixin"; then \
     echo "检测到插件已安装：执行重新配对"; \
     openclaw channels login --channel openclaw-weixin || true; \
     exit 0; \
 fi && \
 
-# 插件未安装 → 安装插件
-npx --registry=https://registry.npmmirror.com -y @tencent-weixin/openclaw-weixin-cli@latest install /home/cloudphone/media/0/openclaw/.local/bin/weixin-installer
+# 插件不存在 → 全新安装
+# 使用 npx 安装最新版本 CLI，并让 CLI 自己决定安装位置（更通用）
+npx --registry=https://registry.npmmirror.com -y @tencent-weixin/openclaw-weixin-cli@latest install
 """
 
 def ascii_to_base64_qr(ascii_lines):

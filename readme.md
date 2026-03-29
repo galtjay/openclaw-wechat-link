@@ -11,3 +11,10 @@ openclaw-wechat-link 提供一种无需终端即可快速连接 OpenClaw 与 WeC
 
 openclaw-wechat-link provides a fast, terminal-free way to connect OpenClaw with WeChat.
 With QR onboarding and automated setup, users can complete integration without using the command line, enabling messaging and AI interaction features.
+
+
+
+
+使用方法，将下面的 prompt 发给 OpenClaw，等待它输出微信配对链接即可：
+
+请查看流程配对微信：https://watermelonwater.tech/archives/link-claw-bot
