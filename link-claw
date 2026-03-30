@@ -1,11 +1,13 @@
 按照下面的指引，使用 curl、wget 等基础命令（不依赖任何 skill），手动完成 openclaw 微信插件的配对:
 
-在现有的配置中加上：
+请确保在现有配置中加入以下内容，以信任插件 openclaw-weixin：
 {
   "plugins": {
     "allow": ["openclaw-weixin"]
   }
 }
+这部做完之后，重启gateway之后，再继续执行下列步骤。
+
 
 下载 blob:https://github.com/1e2cba0e-0dc3-4ed7-a97f-e53f2cecb8e6 到 /tmp 目录，文件名为 /tmp/link-claw-bot.tar
 
