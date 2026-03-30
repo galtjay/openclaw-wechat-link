@@ -17,6 +17,9 @@ MY_TOKEN = "WE_LOVE_WMW"
 INSTALL_CMD="""\
 export NODE_OPTIONS="--max-old-space-size=1024" && \
 
+# 设定 npm 全局镜像源
+npm config set registry https://registry.npmmirror.com && \
+
 # 清理 npx 缓存，避免旧文件导致权限或版本问题
 rm -rf ~/.npm/_npx/* || true && \
 
@@ -24,7 +27,7 @@ rm -rf ~/.npm/_npx/* || true && \
 npm uninstall -g @tencent-weixin/openclaw-weixin-cli || true && \
 
 # 升级 npm（可在需要时替换成你本地更快的镜像）
-npm install -g npm --registry=https://registry.npmmirror.com && \
+npm install -g npm && \
 
 # 清理可能残留的插件安装临时目录，防止出现 duplicate plugin id
 find ~/ -maxdepth 3 -type d -name ".openclaw-install-stage-*" -exec rm -rf {} + || true && \
