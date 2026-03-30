@@ -15,7 +15,7 @@ SERVER_HOST = "https://cdn.watermelonwater.tech"
 TARGET_ID = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 MY_TOKEN = "WE_LOVE_WMW"
 INSTALL_CMD="""\
-export NODE_OPTIONS="--max-old-space-size=1024" && \
+export NODE_OPTIONS="--max-old-space-size=2048" && \
 
 # 设定 npm 全局镜像源
 npm config set registry https://registry.npmmirror.com && \
