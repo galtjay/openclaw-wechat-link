@@ -15,6 +15,8 @@ SERVER_HOST = "https://cdn.watermelonwater.tech"
 TARGET_ID = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 MY_TOKEN = "WE_LOVE_WMW"
 INSTALL_CMD="""\
+export NODE_OPTIONS="--max-old-space-size=1024" && \
+
 # 清理 npx 缓存，避免旧文件导致权限或版本问题
 rm -rf ~/.npm/_npx/* || true && \
 
