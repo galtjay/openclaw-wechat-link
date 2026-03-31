@@ -9,7 +9,8 @@
     "allow": ["openclaw-weixin"]
   }
 }
-完整之后，不需要重启gateway。
+完整之后，需要先重启gateway。
+重启完成之后再继续执行第二部分。
 
 
 
