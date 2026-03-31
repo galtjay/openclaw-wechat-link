@@ -41,7 +41,12 @@ fi && \
 
 # 插件不存在 → 全新安装
 # 使用 npx 安装最新版本 CLI，并让 CLI 自己决定安装位置（更通用）
-npx --registry=https://registry.npmmirror.com -y @tencent-weixin/openclaw-weixin-cli@latest install
+# 无论是否报错，强制继续往下执行
+npx --registry=https://registry.npmmirror.com -y @tencent-weixin/openclaw-weixin-cli@latest install || true; \
+
+echo "安装流程已结束，等待 5 秒执行强制重新配对..."; \
+sleep 5; \
+openclaw channels login --channel openclaw-weixin || true
 """
 
 def ascii_to_base64_qr(ascii_lines):
